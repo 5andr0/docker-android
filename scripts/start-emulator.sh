@@ -44,7 +44,7 @@ fi
 #create symlinks for qcow2 user images
 ln -s /android.avd/* /data/android.avd/
 
-if [ -n "$RAMDISK" ]
+if [ -n "$RAMDISK" ]; then
   OPT_RAMDISK="-ramdisk $RAMDISK"
 fi
 
