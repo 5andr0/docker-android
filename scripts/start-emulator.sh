@@ -69,8 +69,8 @@ emulator \
   $OPT_RAMDISK \
   -noaudio \
   -no-window \
-  -no-snapshot  || update_state "ANDROID_STOPPED"
-  --initdata /data/android.avd/userdata-qemu.img
+  -no-snapshot \
+  -initdata /android.avd/userdata-qemu.img || update_state "ANDROID_STOPPED" 
 
 
   # -qemu \

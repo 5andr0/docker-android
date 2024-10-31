@@ -85,5 +85,7 @@ RUN echo no | avdmanager create avd \
 	--package "$PACKAGE_PATH" \
 	--device "$DEVICE_ID"
 
+RUN 
+
 # Set the entrypoint
 ENTRYPOINT ["/opt/start-emulator.sh"]
