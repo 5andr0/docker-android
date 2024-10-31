@@ -78,20 +78,7 @@ COPY scripts/start-emulator.sh /opt/
 COPY scripts/emulator-monitoring.sh /opt/
 RUN chmod +x /opt/*.sh
 
-RUN echo no | avdmanager create avd \
-	--force \
-	--name android \
-	--abi "$ABI" \
-	--package "$PACKAGE_PATH" \
-	--device "$DEVICE_ID"
-
-RUN adb -a -P 5037 server nodaemon & emulator \
--avd android \
--no-boot-anim \
--skip-adb-auth \
--noaudio \
--no-window \
--no-snapshot & /opt/emulator-monitoring.sh
+COPY ../base/* /data/
 
 # Set the entrypoint
 ENTRYPOINT ["/opt/start-emulator.sh"]
