@@ -85,13 +85,13 @@ RUN echo no | avdmanager create avd \
 	--package "$PACKAGE_PATH" \
 	--device "$DEVICE_ID"
 
-RUN adb -a -P 5037 server nodaemon || emulator \
+RUN adb -a -P 5037 server nodaemon & emulator \
 -avd android \
 -no-boot-anim \
 -skip-adb-auth \
 -noaudio \
 -no-window \
--no-snapshot || /opt/emulator-monitoring.sh
+-no-snapshot & /opt/emulator-monitoring.sh
 
 # Set the entrypoint
 ENTRYPOINT ["/opt/start-emulator.sh"]
