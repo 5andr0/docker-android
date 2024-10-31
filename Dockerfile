@@ -78,7 +78,7 @@ COPY scripts/start-emulator.sh /opt/
 COPY scripts/emulator-monitoring.sh /opt/
 RUN chmod +x /opt/*.sh
 
-COPY ../base/* /data/
+COPY base/* /data/
 
 # Set the entrypoint
 ENTRYPOINT ["/opt/start-emulator.sh"]
