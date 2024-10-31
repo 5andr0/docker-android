@@ -24,11 +24,11 @@ LABEL version "1.0.0"
 
 # Arguments that can be overriden at build-time.
 ARG INSTALL_ANDROID_SDK=1
-ARG API_LEVEL=33
-ARG IMG_TYPE=google_apis
-ARG ARCHITECTURE=x86_64
-ARG CMD_LINE_VERSION=9477386_latest
-ARG DEVICE_ID=pixel
+ARG API_LEVEL=30
+ARG IMG_TYPE=google_apis_playstore
+ARG ARCHITECTURE=x86
+ARG CMD_LINE_VERSION=11076708_latest
+ARG DEVICE_ID=small_phone
 ARG GPU_ACCELERATED=false
 
 # Environment variables.
@@ -77,6 +77,13 @@ RUN /opt/install-sdk.sh
 COPY scripts/start-emulator.sh /opt/
 COPY scripts/emulator-monitoring.sh /opt/
 RUN chmod +x /opt/*.sh
+
+RUN echo no | avdmanager create avd \
+	--force \
+	--name android \
+	--abi "$ABI" \
+	--package "$PACKAGE_PATH" \
+	--device "$DEVICE_ID"
 
 # Set the entrypoint
 ENTRYPOINT ["/opt/start-emulator.sh"]

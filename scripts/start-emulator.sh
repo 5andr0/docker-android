@@ -12,6 +12,7 @@ OPT_MEMORY=${MEMORY:-8192}
 OPT_CORES=${CORES:-4}
 OPT_SKIP_AUTH=${SKIP_AUTH:-true}
 AUTH_FLAG=
+OPT_RAMDISK=
 # Start ADB server by listening on all interfaces.
 echo "Starting the ADB server ..."
 adb -a -P 5037 server nodaemon &
@@ -23,21 +24,6 @@ socat tcp-listen:"$EMULATOR_CONSOLE_PORT",bind="$LOCAL_IP",fork tcp:127.0.0.1:"$
 socat tcp-listen:"$ADB_PORT",bind="$LOCAL_IP",fork tcp:127.0.0.1:"$ADB_PORT" &
 
 export USER=root
-
-# Creating the Android Virtual Emulator.
-TEST_AVD=$(avdmanager list avd | grep -c "android.avd" || true)
-if [ "$TEST_AVD" == "1" ]; then
-  echo "Use the exists Android Virtual Emulator ..."
-else
-  echo "Creating the Android Virtual Emulator ..."
-  echo "Using package '$PACKAGE_PATH', ABI '$ABI' and device '$DEVICE_ID' for creating the emulator"
-  echo no | avdmanager create avd \
-    --force \
-    --name android \
-    --abi "$ABI" \
-    --package "$PACKAGE_PATH" \
-    --device "$DEVICE_ID"
-fi
 
 if [ "$OPT_SKIP_AUTH" == "true" ]; then
   AUTH_FLAG="-skip-adb-auth"
@@ -53,6 +39,13 @@ if [ "$GPU_ACCELERATED" == "true" ]; then
   Xvfb "$DISPLAY" -screen 0 1920x1080x16 -nolisten tcp &
 else
   export GPU_MODE="swiftshader_indirect"
+fi
+
+#create symlinks for qcow2 user images
+ln -s /android.avd/* /data/android.avd/
+
+if [ -n "$RAMDISK" ]
+  OPT_RAMDISK="-ramdisk $RAMDISK"
 fi
 
 # Asynchronously write updates on the standard output
@@ -72,8 +65,9 @@ emulator \
   -memory $OPT_MEMORY \
   -no-boot-anim \
   -cores $OPT_CORES \
-  -ranchu \
   $AUTH_FLAG \
+  $OPT_RAMDISK \
+  -noaudio \
   -no-window \
   -no-snapshot  || update_state "ANDROID_STOPPED"
 

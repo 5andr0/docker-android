@@ -45,13 +45,20 @@ function wait_for_boot() {
   done
   sleep 1
   if [ "$DISABLE_ANIMATION" = "true" ]; then
-  disable_animation
-  sleep 1
+    disable_animation
+    sleep 1
   fi
 
   if [ "$DISABLE_HIDDEN_POLICY" = "true" ]; then
-  hidden_policy
-  sleep 1
+    hidden_policy
+    sleep 1
   fi
+
+  if [ -f /opt/android.init.sh ]; then
+    echo "running /opt/android.init.sh"
+    chmod +x /opt/android.init.sh
+    source /opt/android.init.sh
+  fi
+
   update_state "ANDROID_READY"
 }
