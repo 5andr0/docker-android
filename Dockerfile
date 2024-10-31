@@ -63,6 +63,9 @@ RUN mkdir /root/.android/ && \
 	touch /root/.android/repositories.cfg && \
 	mkdir /data
 
+# Deploying existing instance data
+COPY base/ /data/
+
 # Exporting ADB keys.
 COPY keys/* /root/.android/
 
@@ -77,8 +80,6 @@ RUN /opt/install-sdk.sh
 COPY scripts/start-emulator.sh /opt/
 COPY scripts/emulator-monitoring.sh /opt/
 RUN chmod +x /opt/*.sh
-
-COPY base/* /data/
 
 # Set the entrypoint
 ENTRYPOINT ["/opt/start-emulator.sh"]
