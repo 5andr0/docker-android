@@ -70,6 +70,7 @@ emulator \
   -noaudio \
   -no-window \
   -no-snapshot  || update_state "ANDROID_STOPPED"
+  --initdata /data/android.avd/userdata-qemu.img
 
 
   # -qemu \
